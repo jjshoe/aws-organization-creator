@@ -1,0 +1,39 @@
+- organization_unit: Root
+  service_control_policy:
+    name: RootOu
+    description: policy that manages root of the organizational unit down
+    policy:
+      Version: 2012-10-17
+      Statement:
+        - Effect: Deny
+          Action: "*"
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - iam:*
+            - ec2:*
+          Resource: "*"
+  children:
+    - organization_unit: production
+    - organization_unit: staging
+      children:
+        - account_name: companyname-staging
+          account_email: ops+awsstaging@companyname.com
+    - organization_unit: develop
+      service_control_policy:
+        name: DevelopOu
+        description: policy that manages from the develop organizational unit down
+        policy:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Deny
+              Action:
+                - iam:*
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - ec2:*
+              Resource: "*"
+      children:
+        - account_name: companyname-develop
+          account_email: ops+awsdevelop@companyname.com
